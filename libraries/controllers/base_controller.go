@@ -16,7 +16,7 @@ import (
 
 // Controller is the interface of struct Control
 type Controller interface {
-	Init()
+	Init(db *gorm.DB, validate *validator.Validate, model interface{}, redis *redis.Client)
 	Prepare()
 	Post(ctx *gin.Context)
 	Patch(ctx *gin.Context)
@@ -27,72 +27,70 @@ type Controller interface {
 	Options(ctx *gin.Context)
 }
 
-// Control representing the structure of a RESTful API handler
-type Control struct {
+// BaseControl representing the structure of a RESTful API handler
+type BaseControl struct {
 	DB          *gorm.DB
-	Name        string
-	Model       interface{}
 	Validate    *validator.Validate
+	Model       interface{}
 	RedisClient *redis.Client
 }
 
 // Init inits the Control data
-func (ctrl *Control) Init(db *gorm.DB, resourceName, languageCode string, validate *validator.Validate, model interface{}, redisClient *redis.Client) {
+func (ctrl *BaseControl) Init(db *gorm.DB, validate *validator.Validate, model interface{}, redis *redis.Client) {
 	ctrl.DB = db
-	ctrl.Name = resourceName
 	ctrl.Validate = validate
 	ctrl.Model = model
-	ctrl.RedisClient = redisClient
+	ctrl.RedisClient = redis
 }
 
 // Prepare corresponds http Prepare method
-func (ctrl *Control) Prepare() {}
+func (ctrl *BaseControl) Prepare() {}
 
 // Post corresponds http Post method
-func (ctrl *Control) Post(ctx *gin.Context) {
+func (ctrl *BaseControl) Post(ctx *gin.Context) {
 	utils.ErrRespWithJSON(ctx, http.StatusNotFound, "Method Not Allowed")
 	return
 }
 
 // Patch corresponds http Patch method
-func (ctrl *Control) Patch(ctx *gin.Context) {
+func (ctrl *BaseControl) Patch(ctx *gin.Context) {
 	utils.ErrRespWithJSON(ctx, http.StatusNotFound, "Method Not Allowed")
 	return
 }
 
 // Delete corresponds http Delete method
-func (ctrl *Control) Delete(ctx *gin.Context) {
+func (ctrl *BaseControl) Delete(ctx *gin.Context) {
 	utils.ErrRespWithJSON(ctx, http.StatusNotFound, "Method Not Allowed")
 	return
 }
 
 // GetByID corresponds http Get :id method
-func (ctrl *Control) GetByID(ctx *gin.Context) {
+func (ctrl *BaseControl) GetByID(ctx *gin.Context) {
 	utils.ErrRespWithJSON(ctx, http.StatusNotFound, "Method Not Allowed")
 	return
 }
 
 // GetAll corresponds http Get method
-func (ctrl *Control) GetAll(ctx *gin.Context) {
+func (ctrl *BaseControl) GetAll(ctx *gin.Context) {
 	utils.ErrRespWithJSON(ctx, http.StatusNotFound, "Method Not Allowed")
 	return
 }
 
 // Head corresponds http Head method
-func (ctrl *Control) Head(ctx *gin.Context) {
+func (ctrl *BaseControl) Head(ctx *gin.Context) {
 	utils.ErrRespWithJSON(ctx, http.StatusNotFound, "Method Not Allowed")
 	return
 }
 
 // Options corresponds http Options method
-func (ctrl *Control) Options(ctx *gin.Context) {
+func (ctrl *BaseControl) Options(ctx *gin.Context) {
 	ctx.JSON(http.StatusNoContent, nil)
 	ctx.Abort()
 	return
 }
 
 // GetClientProfile gets the user information
-func (ctrl *Control) GetClientProfile(ctx *gin.Context) (models.ClientProfile, error) {
+func (ctrl *BaseControl) GetClientProfile(ctx *gin.Context) (models.ClientProfile, error) {
 	var clientProfile models.ClientProfile
 	token, err := utils.ExtractToken(ctx.Request.Header)
 	if err != nil {
@@ -115,7 +113,7 @@ func (ctrl *Control) GetClientProfile(ctx *gin.Context) (models.ClientProfile, e
 }
 
 //GetQueryID gets id from Request
-func (ctrl Control) GetQueryID(ctx *gin.Context) string {
+func (ctrl BaseControl) GetQueryID(ctx *gin.Context) string {
 	id := ctx.Params.ByName("id")
 	if id == "" {
 		if id = ctx.Query("id"); id != "" {
@@ -127,7 +125,7 @@ func (ctrl Control) GetQueryID(ctx *gin.Context) string {
 }
 
 // IDToUUID converts string type to uuid
-func (ctrl Control) IDToUUID(idStr string) (uuid.UUID, error) {
+func (ctrl BaseControl) IDToUUID(idStr string) (uuid.UUID, error) {
 	if idStr == "" {
 		return uuid.UUID{}, errors.New("UUID Missing")
 	}

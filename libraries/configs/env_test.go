@@ -13,7 +13,7 @@ func TestEnv(t *testing.T) {
 
 	config = &Env{}
 
-	if err := config.SetPath("env.ini"); err != nil {
+	if err := config.SetPath("env_test.ini"); err != nil {
 		log.Fatal(err)
 	}
 

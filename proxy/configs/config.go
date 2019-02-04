@@ -77,7 +77,7 @@ func init() {
 		log.Fatal(err)
 	}
 
-	if err := Configuration.SetPrefix("api"); err != nil {
+	if err := Configuration.SetPrefix("proxy"); err != nil {
 		log.Fatal(err)
 	}
 
