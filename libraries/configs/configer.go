@@ -11,9 +11,9 @@ import (
 // Configer represeting the config interface of .ini file
 type Configer interface {
 	GetPrefix() string
-	SetPrefix(prefix string)
-	SetPath(path string) error
+	SetPrefix(prefix string) error
 	GetPath() string
+	SetPath(path string) error
 }
 
 // Config representing basic config parameters
@@ -28,19 +28,26 @@ func (cfg *Config) GetPrefix() string {
 }
 
 // SetPrefix sets the config prefix value
-func (cfg *Config) SetPrefix(prefix string) {
+func (cfg *Config) SetPrefix(prefix string) error {
+	if cfg == nil {
+		return errors.New("The Config object is not initialized")
+	}
 	cfg.Prefix = prefix
-}
-
-// SetPath sets the path of the .ini file
-func (cfg *Config) SetPath(path string) error {
-	cfg.Path = path
 	return nil
 }
 
 // GetPath returns the path of the .ini file
 func (cfg *Config) GetPath() string {
 	return cfg.Path
+}
+
+// SetPath sets the path of the .ini file
+func (cfg *Config) SetPath(path string) error {
+	if cfg == nil {
+		return errors.New("The Config object is not initialized")
+	}
+	cfg.Path = path
+	return nil
 }
 
 // LoadConfig loads the .ini file in specific path
