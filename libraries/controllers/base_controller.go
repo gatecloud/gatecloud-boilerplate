@@ -1,12 +1,16 @@
 package controllers
 
 import (
+	"errors"
+	"gatecloud-boilerplate/libraries/models"
 	"net/http"
+	"strings"
 	"utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
+	uuid "github.com/satori/go.uuid"
 	validator "gopkg.in/go-playground/validator.v8"
 )
 
@@ -85,4 +89,54 @@ func (ctrl *Control) Options(ctx *gin.Context) {
 	ctx.JSON(http.StatusNoContent, nil)
 	ctx.Abort()
 	return
+}
+
+// GetClientProfile gets the user information
+func (ctrl *Control) GetClientProfile(ctx *gin.Context) (models.ClientProfile, error) {
+	var clientProfile models.ClientProfile
+	token, err := utils.ExtractToken(ctx.Request.Header)
+	if err != nil {
+		return clientProfile, errors.New("Header token: " + err.Error())
+	}
+
+	s := strings.SplitN(token, ".", 3)
+	if len(s) == 3 {
+		// clientProfile, err = jwtParse(token, configs.GConfig.PublicPemPath)
+		// if err != nil {
+		// 	return clientProfile, err
+		// }
+	} else {
+		if err := ctrl.DB.Where("access_token = ?", token).Find(&clientProfile).Error; err != nil {
+			return clientProfile, err
+		}
+	}
+
+	return clientProfile, nil
+}
+
+//GetQueryID gets id from Request
+func (ctrl Control) GetQueryID(ctx *gin.Context) string {
+	id := ctx.Params.ByName("id")
+	if id == "" {
+		if id = ctx.Query("id"); id != "" {
+			return id
+		}
+		return ""
+	}
+	return id
+}
+
+// IDToUUID converts string type to uuid
+func (ctrl Control) IDToUUID(idStr string) (uuid.UUID, error) {
+	if idStr == "" {
+		return uuid.UUID{}, errors.New("UUID Missing")
+	}
+	id, err := uuid.FromString(idStr)
+	if err != nil {
+		return uuid.UUID{}, err
+	}
+	if id == (uuid.UUID{}) {
+		return id, errors.New("UUID invalid")
+	}
+	return id, nil
 }
