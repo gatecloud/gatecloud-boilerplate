@@ -12,9 +12,10 @@ import (
 // LocalConfig stores the configuration of the local environment variable
 type LocalConfig struct {
 	env.Config
-	Port       string   `json:"port"`
-	Production bool     `json:"production"`
-	Env        *env.Env `json:"-"`
+	Port          string   `json:"port"`
+	Production    bool     `json:"production"`
+	AutoMigration bool     `json:"auto_migration"`
+	Env           *env.Env `json:"-"`
 }
 
 // GetPrefix returns the prefix in .ini file
