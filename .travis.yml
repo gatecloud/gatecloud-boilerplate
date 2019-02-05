@@ -1,6 +1,16 @@
 language: go
-go_import_path: gatecloud/gatecloud-boilerplate
+
 go:
-  - "1.10"
+  - "1.10.x"
+
+install:
+  - go get github.com/gin-gonic/gin
+  - go get gopkg.in/go-playground/validator.v8
+  - go get github.com/jinzhu/gorm
+  - go get github.com/jinzhu/gorm/dialects/postgres
+  - go get github.com/zpatrick/go-config
+  - go get github.com/go-redis/redis
+  - go get github.com/satori/go.uuid
+  - go get github.com/gin-contrib/cors
 
 script: go test -v ./...
