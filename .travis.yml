@@ -1,0 +1,6 @@
+language: go
+go_import_path: gatecloud/gatecloud-boilerplate
+go:
+  - "1.10"
+
+script: go test -v ./...
