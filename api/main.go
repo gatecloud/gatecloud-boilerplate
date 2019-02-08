@@ -4,9 +4,9 @@ import (
 	"gatecloud-boilerplate/api/configs"
 	"gatecloud-boilerplate/api/routes"
 	"gatecloud-boilerplate/api/validations"
-	libroutes "gatecloud-boilerplate/libraries/routes"
 	"log"
 
+	libRoute "github.com/gatecloud/webservice-library/route"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -32,7 +32,7 @@ func main() {
 	routeGroup := routes.InitRoute()
 
 	// Create shared resources
-	sr := &libroutes.SharedResource{
+	sr := &libRoute.Resource{
 		DB:        db,
 		Validator: validations.InitValidation(),
 	}
