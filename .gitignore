@@ -1,2 +1,4 @@
 libraries/configs/env.ini
 proxy/route.json
+api/api.exe
+proxy/proxy.exe

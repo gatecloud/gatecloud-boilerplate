@@ -2,15 +2,15 @@ package controllers
 
 import (
 	"gatecloud-boilerplate/api/models"
-	"gatecloud-boilerplate/libraries/controllers"
 	"net/http"
 
+	libController "github.com/gatecloud/webservice-library/controller"
 	"github.com/gin-gonic/gin"
 )
 
 // TestAPIControl tests the framework
 type TestAPIControl struct {
-	controllers.BaseControl
+	libController.BaseControl
 }
 
 func (ctrl *TestAPIControl) GetAll(ctx *gin.Context) {

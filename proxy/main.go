@@ -4,8 +4,8 @@ import (
 	"gatecloud-boilerplate/proxy/configs"
 	"gatecloud-boilerplate/proxy/middlewares"
 	"log"
-	proxy "reverse-proxy"
 
+	proxy "github.com/gatecloud/reverse-proxy"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
