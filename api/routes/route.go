@@ -3,14 +3,15 @@ package routes
 import (
 	"gatecloud-boilerplate/api/controllers"
 	"gatecloud-boilerplate/api/models"
-	"gatecloud-boilerplate/libraries/routes"
 	"reflect"
+
+	libRoute "github.com/gatecloud/webservice-library/route"
 )
 
 // InitRoute inits the route group
-func InitRoute() []routes.Route {
-	r := []routes.Route{
-		routes.Route{
+func InitRoute() []libRoute.Route {
+	r := []libRoute.Route{
+		libRoute.Route{
 			Name:       "TestAPI",
 			Controller: reflect.TypeOf(controllers.TestAPIControl{}),
 			Model:      &models.TestAPI{},
