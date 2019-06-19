@@ -1,6 +1,10 @@
 package validations
 
-import validator "gopkg.in/go-playground/validator.v8"
+import (
+	"gatecloud-boilerplate/api/models"
+
+	validator "gopkg.in/go-playground/validator.v8"
+)
 
 // InitValidation inits a validation handler
 func InitValidation() *validator.Validate {
@@ -8,5 +12,8 @@ func InitValidation() *validator.Validate {
 		TagName: "validate",
 	}
 
-	return validator.New(config)
+	validate := validator.New(config)
+	validate.RegisterStructValidation(CrossFieldValidation, models.TestAPI{})
+	validate.RegisterStructValidation(ReadOnlyValidation, models.TestAPI{})
+	return validate
 }

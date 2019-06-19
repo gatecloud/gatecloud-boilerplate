@@ -6,9 +6,15 @@ import (
 	"log"
 
 	proxy "github.com/gatecloud/reverse-proxy"
+	"github.com/getsentry/raven-go"
+	"github.com/gin-contrib/sentry"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
+
+func init() {
+	raven.SetDSN("")
+}
 
 func main() {
 	// Init Database
@@ -34,6 +40,7 @@ func main() {
 	// Register middlewares
 	r.Use(middlewares.Cors(configs.Configuration.CorsEnabled))
 	r.Use(middlewares.AddResponseHeader("Access-Control-Expose-Headers", "X-Total-Count"))
+	r.Use(sentry.Recovery(raven.DefaultClient, false))
 
 	// Read reverse proxy config file
 	servers, err := proxy.Default("route.json")

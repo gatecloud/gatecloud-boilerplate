@@ -2,8 +2,9 @@ package configs
 
 import (
 	"log"
-	"path"
-	"runtime"
+	"os"
+	"path/filepath"
+	"strings"
 
 	libConfig "github.com/gatecloud/webservice-library/config"
 )
@@ -20,13 +21,17 @@ type LocalConfig struct {
 }
 
 // Configuration is proxy's global configuration
-var Configuration *LocalConfig
+var Configuration LocalConfig
 
 func init() {
-	Configuration = &LocalConfig{}
-	// Load the local.ini file
-	_, dir, _, _ := runtime.Caller(1)
-	if err := Configuration.SetPath(path.Join(path.Dir(dir), "/configs/local.ini")); err != nil {
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	dir = filepath.FromSlash(dir)
+	rootDir := dir[:strings.LastIndex(dir, string(os.PathSeparator)+"proxy")]
+	if err := Configuration.SetPath(rootDir + "/proxy/configs/local.ini"); err != nil {
 		log.Fatal(err)
 	}
 
@@ -34,7 +39,7 @@ func init() {
 		log.Fatal(err)
 	}
 
-	if err := libConfig.LoadConfig(Configuration); err != nil {
+	if err := libConfig.LoadConfig(&Configuration); err != nil {
 		log.Fatal(err)
 	}
 
